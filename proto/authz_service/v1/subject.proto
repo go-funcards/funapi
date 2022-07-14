@@ -1,0 +1,54 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "org.funcards.authz.proto.v1";
+option java_outer_classname = "SubjectProto";
+option go_package = "./;v1";
+option csharp_namespace = "FunCardsOrg.Grpc.V1";
+
+package proto.v1;
+
+import "google/protobuf/empty.proto";
+
+service Subject {
+  rpc SaveSub(SaveSubRequest) returns (google.protobuf.Empty);
+  rpc DeleteSub(DeleteSubRequest) returns (google.protobuf.Empty);
+  rpc DeleteRef(DeleteRefRequest) returns (google.protobuf.Empty);
+  rpc GetSub(SubRequest) returns (SubResponse);
+}
+
+message SaveSubRequest {
+  message Ref {
+    string ref_id = 1;
+    repeated string roles = 2;
+    bool delete = 3;
+  }
+
+  string sub_id = 1;
+  repeated string roles = 2;
+  repeated Ref refs = 3;
+}
+
+message DeleteSubRequest {
+  string sub_id = 1;
+}
+
+message DeleteRefRequest {
+  string ref_id = 1;
+}
+
+message SubRequest {
+  string sub_id = 1;
+  string ref_id = 2;
+}
+
+message SubResponse {
+  message Ref {
+    string ref_id = 1;
+    repeated string roles = 2;
+  }
+
+  string sub_id = 1;
+  repeated string roles = 2;
+  repeated Ref refs = 3;
+}

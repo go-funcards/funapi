@@ -1,0 +1,1691 @@
+basePath: /api/v1
+definitions:
+  boards.Board:
+    properties:
+      board_id:
+        type: string
+      created_at:
+        type: string
+      data:
+        type: string
+      description:
+        type: string
+      members:
+        items:
+          $ref: '#/definitions/boards.Member'
+        type: array
+      name:
+        type: string
+      owner_id:
+        type: string
+      type:
+        type: string
+    type: object
+  boards.CreateBoardDTO:
+    properties:
+      data:
+        maxLength: 10000
+        type: string
+      description:
+        maxLength: 1000
+        type: string
+      name:
+        maxLength: 150
+        type: string
+      type:
+        enum:
+        - UNK_BOARD
+        - CARDS
+        type: string
+    required:
+    - name
+    - type
+    type: object
+  boards.Member:
+    properties:
+      member_id:
+        type: string
+      roles:
+        items:
+          type: string
+        type: array
+    type: object
+  boards.PageResponse:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/boards.Board'
+        type: array
+      page_index:
+        type: integer
+      page_size:
+        type: integer
+      total:
+        type: integer
+    type: object
+  boards.UpdateBoardDTO:
+    properties:
+      data:
+        maxLength: 10000
+        type: string
+      description:
+        maxLength: 1000
+        type: string
+      name:
+        maxLength: 150
+        type: string
+    type: object
+  cards.Attachment:
+    properties:
+      attachment_id:
+        type: string
+      type:
+        type: string
+    type: object
+  cards.Card:
+    properties:
+      attachments:
+        items:
+          $ref: '#/definitions/cards.Attachment'
+        type: array
+      board_id:
+        type: string
+      card_id:
+        type: string
+      category_id:
+        type: string
+      content:
+        type: string
+      created_at:
+        type: string
+      name:
+        type: string
+      owner_id:
+        type: string
+      position:
+        type: integer
+      tags:
+        items:
+          type: string
+        type: array
+      type:
+        type: string
+    type: object
+  cards.CreateCardDTO:
+    properties:
+      board_id:
+        format: uuid
+        type: string
+      category_id:
+        format: uuid
+        type: string
+      content:
+        maxLength: 10000
+        type: string
+      name:
+        maxLength: 1000
+        type: string
+      position:
+        type: integer
+      tags:
+        items:
+          type: string
+        type: array
+      type:
+        enum:
+        - UNK_CARD
+        - TEXT
+        type: string
+    required:
+    - board_id
+    - category_id
+    - name
+    - type
+    type: object
+  cards.PageResponse:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/cards.Card'
+        type: array
+      page_index:
+        type: integer
+      page_size:
+        type: integer
+      total:
+        type: integer
+    type: object
+  cards.UpdateCardDTO:
+    properties:
+      board_id:
+        format: uuid
+        type: string
+      card_id:
+        format: uuid
+        type: string
+      category_id:
+        format: uuid
+        type: string
+      content:
+        maxLength: 10000
+        type: string
+      name:
+        maxLength: 1000
+        type: string
+      position:
+        type: integer
+      tags:
+        items:
+          type: string
+        type: array
+    required:
+    - card_id
+    type: object
+  cards.UpdateManyCardsDTO:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/cards.UpdateCardDTO'
+        minItems: 1
+        type: array
+    required:
+    - data
+    type: object
+  categories.Category:
+    properties:
+      board_id:
+        type: string
+      category_id:
+        type: string
+      created_at:
+        type: string
+      name:
+        type: string
+      owner_id:
+        type: string
+      position:
+        type: integer
+    type: object
+  categories.CreateCategoryDTO:
+    properties:
+      board_id:
+        format: uuid
+        type: string
+      name:
+        maxLength: 150
+        type: string
+      position:
+        type: integer
+    required:
+    - board_id
+    type: object
+  categories.PageResponse:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/categories.Category'
+        type: array
+      page_index:
+        type: integer
+      page_size:
+        type: integer
+      total:
+        type: integer
+    type: object
+  categories.UpdateCategoryDTO:
+    properties:
+      board_id:
+        format: uuid
+        type: string
+      category_id:
+        format: uuid
+        type: string
+      name:
+        maxLength: 150
+        type: string
+      position:
+        type: integer
+    required:
+    - category_id
+    type: object
+  categories.UpdateManyCategoriesDTO:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/categories.UpdateCategoryDTO'
+        minItems: 1
+        type: array
+    required:
+    - data
+    type: object
+  httputil.APIError:
+    properties:
+      code:
+        type: string
+      errors:
+        type: any
+      message:
+        type: string
+      status:
+        type: integer
+    type: object
+  members.SaveMemberDTO:
+    properties:
+      roles:
+        items:
+          type: string
+        type: array
+    required:
+    - roles
+    type: object
+  session.CreateUserDTO:
+    properties:
+      email:
+        maxLength: 180
+        minLength: 3
+        type: string
+      name:
+        maxLength: 100
+        minLength: 3
+        type: string
+      password:
+        maxLength: 64
+        minLength: 8
+        type: string
+      repeat_password:
+        maxLength: 64
+        minLength: 8
+        type: string
+    required:
+    - email
+    - name
+    - password
+    - repeat_password
+    type: object
+  session.CredentialsDTO:
+    properties:
+      email:
+        maxLength: 255
+        minLength: 3
+        type: string
+      password:
+        maxLength: 64
+        minLength: 8
+        type: string
+    required:
+    - email
+    - password
+    type: object
+  session.RefreshTokenDTO:
+    properties:
+      refresh_token:
+        type: string
+    required:
+    - refresh_token
+    type: object
+  tags.CreateTagDTO:
+    properties:
+      board_id:
+        format: uuid
+        type: string
+      color:
+        maxLength: 50
+        type: string
+      name:
+        maxLength: 100
+        type: string
+    required:
+    - board_id
+    - color
+    type: object
+  tags.PageResponse:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/tags.Tag'
+        type: array
+      page_index:
+        type: integer
+      page_size:
+        type: integer
+      total:
+        type: integer
+    type: object
+  tags.Tag:
+    properties:
+      board_id:
+        type: string
+      color:
+        type: string
+      created_at:
+        type: string
+      name:
+        type: string
+      owner_id:
+        type: string
+      tag_id:
+        type: string
+    type: object
+  tags.UpdateTagDTO:
+    properties:
+      board_id:
+        format: uuid
+        type: string
+      color:
+        maxLength: 50
+        type: string
+      name:
+        maxLength: 100
+        type: string
+    type: object
+  token.Session:
+    properties:
+      access_token:
+        type: string
+      expires_in:
+        description: The lifetime in seconds of refresh token
+        type: integer
+      refresh_token:
+        type: string
+      token_type:
+        description: Bearer
+        type: string
+    type: object
+  users.UpdateUserDTO:
+    properties:
+      email:
+        maxLength: 255
+        minLength: 3
+        type: string
+      name:
+        maxLength: 100
+        minLength: 3
+        type: string
+      new_password:
+        maxLength: 64
+        minLength: 8
+        type: string
+      old_password:
+        maxLength: 64
+        minLength: 8
+        type: string
+      repeat_new_password:
+        maxLength: 64
+        minLength: 8
+        type: string
+    type: object
+  users.User:
+    properties:
+      created_at:
+        type: string
+      email:
+        type: string
+      name:
+        type: string
+      user_id:
+        type: string
+    type: object
+info:
+  contact: {}
+  description: REST API for FunCards App
+  title: FunCards API
+  version: 0.0.1-alpha
+paths:
+  /boards:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Page Index
+        in: query
+        minimum: 0
+        name: page_index
+        type: integer
+      - description: Page Size
+        in: query
+        maximum: 1000
+        minimum: 1
+        name: page_size
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/boards.PageResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+      security:
+      - BearerAuth: []
+      summary: Board List
+      tags:
+      - Boards
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Board data
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/boards.CreateBoardDTO'
+      responses:
+        "201":
+          description: ""
+          headers:
+            Location:
+              description: /boards/{board_id}
+              type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+      security:
+      - BearerAuth: []
+      summary: Create Board
+      tags:
+      - Boards
+  /boards/{board_id}:
+    delete:
+      parameters:
+      - description: Board ID
+        format: uuid
+        in: path
+        name: board_id
+        required: true
+        type: string
+      responses:
+        "204":
+          description: ""
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+      security:
+      - BearerAuth: []
+      summary: Delete Board
+      tags:
+      - Boards
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Board ID
+        format: uuid
+        in: path
+        name: board_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/boards.Board'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+      security:
+      - BearerAuth: []
+      summary: Read Board
+      tags:
+      - Boards
+    patch:
+      consumes:
+      - application/json
+      parameters:
+      - description: Board ID
+        format: uuid
+        in: path
+        name: board_id
+        required: true
+        type: string
+      - description: Board data
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/boards.UpdateBoardDTO'
+      responses:
+        "204":
+          description: ""
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+      security:
+      - BearerAuth: []
+      summary: Update Board
+      tags:
+      - Boards
+  /boards/{board_id}/members/{member_id}:
+    delete:
+      parameters:
+      - description: Board ID
+        format: uuid
+        in: path
+        name: board_id
+        required: true
+        type: string
+      - description: Member ID
+        format: uuid
+        in: path
+        name: member_id
+        required: true
+        type: string
+      responses:
+        "204":
+          description: ""
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+      security:
+      - BearerAuth: []
+      summary: Delete Board Member
+      tags:
+      - Boards
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Board ID
+        format: uuid
+        in: path
+        name: board_id
+        required: true
+        type: string
+      - description: Member ID
+        format: uuid
+        in: path
+        name: member_id
+        required: true
+        type: string
+      - description: Member data
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/members.SaveMemberDTO'
+      responses:
+        "204":
+          description: ""
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+      security:
+      - BearerAuth: []
+      summary: Save Board Member
+      tags:
+      - Boards
+  /cards:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Board ID
+        format: uuid
+        in: query
+        name: board_id
+        required: true
+        type: string
+      - description: Page Index
+        in: query
+        minimum: 0
+        name: page_index
+        type: integer
+      - description: Page Size
+        in: query
+        maximum: 1000
+        minimum: 1
+        name: page_size
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/cards.PageResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+      security:
+      - BearerAuth: []
+      summary: Card List
+      tags:
+      - Cards
+    patch:
+      consumes:
+      - application/json
+      parameters:
+      - description: Cards data
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/cards.UpdateManyCardsDTO'
+      responses:
+        "204":
+          description: ""
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+      security:
+      - BearerAuth: []
+      summary: Update Many Cards
+      tags:
+      - Cards
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Card data
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/cards.CreateCardDTO'
+      responses:
+        "201":
+          description: ""
+          headers:
+            Location:
+              description: /cards/{card_id}
+              type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+      security:
+      - BearerAuth: []
+      summary: Create Card
+      tags:
+      - Cards
+  /cards/{card_id}:
+    delete:
+      parameters:
+      - description: Card ID
+        format: uuid
+        in: path
+        name: card_id
+        required: true
+        type: string
+      responses:
+        "204":
+          description: ""
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+      security:
+      - BearerAuth: []
+      summary: Delete Card
+      tags:
+      - Cards
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Card ID
+        format: uuid
+        in: path
+        name: card_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/cards.Card'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+      security:
+      - BearerAuth: []
+      summary: Read Card
+      tags:
+      - Cards
+    patch:
+      consumes:
+      - application/json
+      parameters:
+      - description: Card ID
+        format: uuid
+        in: path
+        name: card_id
+        required: true
+        type: string
+      - description: Card data
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/cards.UpdateCardDTO'
+      responses:
+        "204":
+          description: ""
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+      security:
+      - BearerAuth: []
+      summary: Update Card
+      tags:
+      - Cards
+  /categories:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Board ID
+        format: uuid
+        in: query
+        name: board_id
+        required: true
+        type: string
+      - description: Page Index
+        in: query
+        minimum: 0
+        name: page_index
+        type: integer
+      - description: Page Size
+        in: query
+        maximum: 1000
+        minimum: 1
+        name: page_size
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/categories.PageResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+      security:
+      - BearerAuth: []
+      summary: Category List
+      tags:
+      - Categories
+    patch:
+      consumes:
+      - application/json
+      parameters:
+      - description: Categories data
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/categories.UpdateManyCategoriesDTO'
+      responses:
+        "204":
+          description: ""
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+      security:
+      - BearerAuth: []
+      summary: Update Many Categories
+      tags:
+      - Categories
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Category data
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/categories.CreateCategoryDTO'
+      responses:
+        "201":
+          description: ""
+          headers:
+            Location:
+              description: /categories/{category_id}
+              type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+      security:
+      - BearerAuth: []
+      summary: Create Category
+      tags:
+      - Categories
+  /categories/{category_id}:
+    delete:
+      parameters:
+      - description: Category ID
+        format: uuid
+        in: path
+        name: category_id
+        required: true
+        type: string
+      responses:
+        "204":
+          description: ""
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+      security:
+      - BearerAuth: []
+      summary: Delete Category
+      tags:
+      - Categories
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Category ID
+        format: uuid
+        in: path
+        name: category_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/categories.Category'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+      security:
+      - BearerAuth: []
+      summary: Read Category
+      tags:
+      - Categories
+    patch:
+      consumes:
+      - application/json
+      parameters:
+      - description: Category ID
+        format: uuid
+        in: path
+        name: category_id
+        required: true
+        type: string
+      - description: Category data
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/categories.UpdateCategoryDTO'
+      responses:
+        "204":
+          description: ""
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+      security:
+      - BearerAuth: []
+      summary: Update Category
+      tags:
+      - Categories
+  /session/create:
+    post:
+      consumes:
+      - application/json
+      description: Return session of created user
+      parameters:
+      - description: User data
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/session.CreateUserDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/token.Session'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+      summary: Session By Creating User
+      tags:
+      - Session
+  /session/credentials:
+    post:
+      consumes:
+      - application/json
+      description: Return session by credentials
+      parameters:
+      - description: Credentials
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/session.CredentialsDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/token.Session'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+      summary: Session By Credentials
+      tags:
+      - Session
+  /session/refresh:
+    post:
+      consumes:
+      - application/json
+      description: Return session by refresh token
+      parameters:
+      - description: Refresh Token
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/session.RefreshTokenDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/token.Session'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+      summary: Session By Refresh Token
+      tags:
+      - Session
+  /tags:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Board ID
+        format: uuid
+        in: query
+        name: board_id
+        required: true
+        type: string
+      - description: Page Index
+        in: query
+        minimum: 0
+        name: page_index
+        type: integer
+      - description: Page Size
+        in: query
+        maximum: 1000
+        minimum: 1
+        name: page_size
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/tags.PageResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+      security:
+      - BearerAuth: []
+      summary: Tag List
+      tags:
+      - Tags
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Tag data
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/tags.CreateTagDTO'
+      responses:
+        "201":
+          description: ""
+          headers:
+            Location:
+              description: /tags/{tag_id}
+              type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+      security:
+      - BearerAuth: []
+      summary: Create Tag
+      tags:
+      - Tags
+  /tags/{tag_id}:
+    delete:
+      parameters:
+      - description: Tag ID
+        format: uuid
+        in: path
+        name: tag_id
+        required: true
+        type: string
+      responses:
+        "204":
+          description: ""
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+      security:
+      - BearerAuth: []
+      summary: Delete Tag
+      tags:
+      - Tags
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Tag ID
+        format: uuid
+        in: path
+        name: tag_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/tags.Tag'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+      security:
+      - BearerAuth: []
+      summary: Read Tag
+      tags:
+      - Tags
+    patch:
+      consumes:
+      - application/json
+      parameters:
+      - description: Tag ID
+        format: uuid
+        in: path
+        name: tag_id
+        required: true
+        type: string
+      - description: Tag data
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/tags.UpdateTagDTO'
+      responses:
+        "204":
+          description: ""
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+      security:
+      - BearerAuth: []
+      summary: Update Tag
+      tags:
+      - Tags
+  /users/{user_id}:
+    patch:
+      consumes:
+      - application/json
+      description: Update User Info
+      parameters:
+      - description: user id
+        format: uuid
+        in: path
+        name: user_id
+        required: true
+        type: string
+      - description: User data
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/users.UpdateUserDTO'
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: ""
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+      security:
+      - BearerAuth: []
+      summary: Update User
+      tags:
+      - Users
+  /users/me:
+    get:
+      description: Return authenticated user info
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/users.User'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httputil.APIError'
+      security:
+      - BearerAuth: []
+      summary: Get Authenticated User
+      tags:
+      - Users
+securityDefinitions:
+  BearerAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

@@ -1,0 +1,60 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "org.funcards.tag.proto.v1";
+option java_outer_classname = "TagProto";
+option go_package = "./;v1";
+option csharp_namespace = "FunCardsOrg.Grpc.V1";
+
+package proto.v1;
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/empty.proto";
+
+service Tag {
+  rpc CreateTag(CreateTagRequest) returns (google.protobuf.Empty);
+  rpc UpdateTag(UpdateTagRequest) returns (google.protobuf.Empty);
+  rpc DeleteTag(DeleteTagRequest) returns (google.protobuf.Empty);
+  rpc GetTags(TagsRequest) returns (TagsResponse);
+}
+
+message CreateTagRequest {
+  string tag_id = 1;
+  string owner_id = 2;
+  string board_id = 3;
+  string name = 4;
+  string color = 5;
+}
+
+message UpdateTagRequest {
+  string tag_id = 1;
+  string board_id = 2;
+  string name = 3;
+  string color = 4;
+}
+
+message DeleteTagRequest {
+  string tag_id = 1;
+}
+
+message TagsRequest {
+  uint64 page_index = 1;
+  uint32 page_size = 2;
+  repeated string tag_ids = 3;
+  repeated string owner_ids = 4;
+  repeated string board_ids = 5;
+}
+
+message TagsResponse {
+  message Tag {
+    string tag_id = 1;
+    string owner_id = 2;
+    string board_id = 3;
+    string name = 4;
+    string color = 5;
+    google.protobuf.Timestamp created_at = 6;
+  }
+
+  uint64 total = 1;
+  repeated Tag tags = 2;
+}

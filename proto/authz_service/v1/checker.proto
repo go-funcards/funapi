@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "org.funcards.authz.proto.v1";
+option java_outer_classname = "AuthorizationCheckerProto";
+option go_package = "./;v1";
+option csharp_namespace = "FunCardsOrg.Grpc.V1";
+
+package proto.v1;
+
+service AuthorizationChecker {
+  rpc IsGranted(IsGrantedRequest) returns (Granted);
+}
+
+message IsGrantedRequest {
+  repeated string params = 1;
+}
+
+message Granted {
+  bool yes = 1;
+}

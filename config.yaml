@@ -1,0 +1,12 @@
+jwt:
+  signer:
+    audience:
+      - "funapi"
+      - "authz-service"
+      - "user-service"
+      - "board-service"
+      - "tag-service"
+      - "category-service"
+      - "card-service"
+  verifier:
+    audience: "funapi"

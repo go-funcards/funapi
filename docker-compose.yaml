@@ -1,0 +1,118 @@
+services:
+  funapi:
+    image: ghcr.io/go-funcards/funapi:main
+    environment:
+      - DEBUG_MODE=true
+      - SWAGGER_ENABLE=true
+      - JWT_SIGNER_TTL=1440m
+      - JWT_SIGNER_PRIVATE_KEY=/id_rsa
+      - JWT_VERIFIER_PUBLIC_KEY=/id_rsa.pub
+      - REDIS_URI=redis://default:eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81@redis:6379/0
+      - SERVICE_AUTHZ_ADDRESS=authz-service:80
+      - SERVICE_USER_ADDRESS=user-service:80
+      - SERVICE_BOARD_ADDRESS=board-service:80
+      - SERVICE_TAG_ADDRESS=tag-service:80
+      - SERVICE_CATEGORY_ADDRESS=category-service:80
+      - SERVICE_CARD_ADDRESS=card-service:80
+    ports:
+      - 8060:80
+    volumes:
+      - ./.data/cert/id_rsa:/id_rsa
+      - ./.data/cert/id_rsa.pub:/id_rsa.pub
+    depends_on:
+      - redis
+      - authz-service
+      - user-service
+      - board-service
+      - tag-service
+      - category-service
+      - card-service
+
+  authz-service:
+    image: ghcr.io/go-funcards/authz-service:main
+    environment:
+      - DEBUG_MODE=true
+      - SERVER_LISTEN_PORT=80
+      - MONGODB_URI=mongodb://funcards:password@mongodb:27017/fundb?authsource=admin&authmechanism=SCRAM-SHA-256
+    ports:
+      - 8050:80
+    depends_on:
+      - mongodb
+
+  user-service:
+    image: ghcr.io/go-funcards/user-service:main
+    environment:
+      - DEBUG_MODE=true
+      - SERVER_LISTEN_PORT=80
+      - MONGODB_URI=mongodb://funcards:password@mongodb:27017/fundb?authsource=admin&authmechanism=SCRAM-SHA-256
+    ports:
+      - 8051:80
+    depends_on:
+      - mongodb
+
+  board-service:
+    image: ghcr.io/go-funcards/board-service:main
+    environment:
+      - DEBUG_MODE=true
+      - SERVER_LISTEN_PORT=80
+      - MONGODB_URI=mongodb://funcards:password@mongodb:27017/fundb?authsource=admin&authmechanism=SCRAM-SHA-256
+    ports:
+      - 8052:80
+    depends_on:
+      - mongodb
+
+  tag-service:
+    image: ghcr.io/go-funcards/tag-service:main
+    environment:
+      - DEBUG_MODE=true
+      - SERVER_LISTEN_PORT=80
+      - MONGODB_URI=mongodb://funcards:password@mongodb:27017/fundb?authsource=admin&authmechanism=SCRAM-SHA-256
+    ports:
+      - 8053:80
+    depends_on:
+      - mongodb
+
+  category-service:
+    image: ghcr.io/go-funcards/category-service:main
+    environment:
+      - DEBUG_MODE=true
+      - SERVER_LISTEN_PORT=80
+      - MONGODB_URI=mongodb://funcards:password@mongodb:27017/fundb?authsource=admin&authmechanism=SCRAM-SHA-256
+    ports:
+      - 8054:80
+    depends_on:
+      - mongodb
+
+  card-service:
+    image: ghcr.io/go-funcards/card-service:main
+    environment:
+      - DEBUG_MODE=true
+      - SERVER_LISTEN_PORT=80
+      - MONGODB_URI=mongodb://funcards:password@mongodb:27017/fundb?authsource=admin&authmechanism=SCRAM-SHA-256
+    ports:
+      - 8055:80
+    depends_on:
+      - mongodb
+
+  mongodb:
+    image: mongo:5.0
+    ports:
+      - 27017:27017
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=funcards
+      - MONGO_INITDB_ROOT_PASSWORD=password
+      - MONGO_INITDB_DATABASE=fundb
+    volumes:
+      - mongodb-data:/data/db
+
+  redis:
+    image: redis:7.0-alpine
+    command: redis-server --save 20 1 --loglevel warning --requirepass eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81
+    ports:
+      - 6379:6379
+    volumes:
+      - redis-data:/data
+
+volumes:
+  mongodb-data:
+  redis-data:

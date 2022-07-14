@@ -1,0 +1,87 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "org.funcards.board.proto.v1";
+option java_outer_classname = "BoardProto";
+option go_package = "./;v1";
+option csharp_namespace = "FunCardsOrg.Grpc.V1";
+
+package proto.v1;
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/empty.proto";
+
+service Board {
+  rpc CreateBoard(CreateBoardRequest) returns (google.protobuf.Empty);
+  rpc UpdateBoard(UpdateBoardRequest) returns (google.protobuf.Empty);
+  rpc DeleteBoard(DeleteBoardRequest) returns (google.protobuf.Empty);
+  rpc GetBoards(BoardsRequest) returns (BoardsResponse);
+}
+
+enum BoardType {
+  UNK_BOARD = 0; // UNKNOWN_BOARD
+  CARDS = 1;
+}
+
+message CreateBoardRequest {
+  message Member {
+    string member_id = 1;
+    repeated string roles = 2;
+  }
+
+  string board_id = 1;
+  string owner_id = 2;
+  string name = 3;
+  string description = 4;
+  string data = 5;
+  BoardType type = 6;
+  repeated Member members = 7;
+}
+
+message UpdateBoardRequest {
+  message Member {
+    string member_id = 1;
+    repeated string roles = 2;
+    bool delete = 3;
+  }
+
+  string board_id = 1;
+  string name = 2;
+  string description = 3;
+  string data = 4;
+  repeated Member members = 5;
+}
+
+message DeleteBoardRequest {
+  string board_id = 1;
+}
+
+message BoardsRequest {
+  uint64 page_index = 1;
+  uint32 page_size = 2;
+  repeated BoardType types = 3;
+  repeated string board_ids = 4;
+  repeated string owner_ids = 5;
+  repeated string member_ids = 6;
+}
+
+message BoardsResponse {
+  message Board {
+    message Member {
+      string member_id = 1;
+      repeated string roles = 2;
+    }
+
+    string board_id = 1;
+    string owner_id = 2;
+    string name = 3;
+    string description = 4;
+    string data = 5;
+    BoardType type = 6;
+    google.protobuf.Timestamp created_at = 7;
+    repeated Member members = 8;
+  }
+
+  uint64 total = 1;
+  repeated Board boards = 2;
+}
